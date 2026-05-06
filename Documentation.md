@@ -145,7 +145,7 @@ classDiagram
 
 ## 4. Project Structure
 
-\```
+```
 app/
 ├── api/ # HTTP layer (routes, schemas, middleware)
 ├── core/ # Config, dependencies, shared utilities
@@ -153,7 +153,7 @@ app/
 ├── infrastructure/ # DB models, repository implementations
 ├── usecases/ # Application business logic
 └── tests/ # Unit & integration tests
-\```
+```
 
 ## 5. Layer Responsibilities
 
