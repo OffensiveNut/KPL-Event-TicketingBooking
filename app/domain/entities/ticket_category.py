@@ -24,7 +24,7 @@ class TicketCategory:
         self.price = price
         self.quota = quota
         self.sales_period = SalesPeriod(sales_start_date, sales_end_date)
-        self.is_complete = False
+        self.is_active = True
 
         self._domain_events: list = []
         self._domain_events.append(TicketCategoryCreated(id=self.id, name=self.name))
