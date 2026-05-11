@@ -1,6 +1,9 @@
 import uuid
 from datetime import date
 
+from app.domain.entities.ticket_category import TicketCategory
+from app.domain.events.event_created import EventCreated
+from app.domain.events.event_published import EventPublished
 from app.domain.value_objects.date_range import DateRange
 from app.domain.value_objects.event_status import EventStatus
 
@@ -27,4 +30,24 @@ class Event:
         self.status = EventStatus.DRAFT
 
         self._domain_events: list = []
-        self._domain_events.append
+        self._domain_events.append(EventCreated(event_id=self.id, event_name=self.name))
+
+        self._ticket_categories: list[TicketCategory] = []
+
+    def _total_quota(self) -> int:
+        return sum(tc.quota for tc in self._ticket_categories)
+
+    def publish(self) -> None:
+        if self.status == EventStatus.CANCELLED:
+            raise ValueError("Cannot publish a cancelled event")
+        if self.status != EventStatus.DRAFT:
+            raise ValueError("Event must be in draft status to be published")
+        if not any(tc.is_active for tc in self._ticket_categories):
+            raise ValueError("Event must have at least one ticket category")
+        if self._total_quota() > self.max_capacity:
+            raise ValueError("Total quota exceeds max capacity")
+
+        self.status = EventStatus.PUBLISHED
+        self._domain_events.append(
+            EventPublished(event_id=self.id, event_name=self.name)
+        )
