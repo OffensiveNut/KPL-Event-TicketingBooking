@@ -2,6 +2,7 @@ import uuid
 from datetime import date
 
 from app.domain.entities.ticket_category import TicketCategory
+from app.domain.events.event_cancelled import EventCancelled
 from app.domain.events.event_created import EventCreated
 from app.domain.events.event_published import EventPublished
 from app.domain.value_objects.date_range import DateRange
@@ -50,4 +51,15 @@ class Event:
         self.status = EventStatus.PUBLISHED
         self._domain_events.append(
             EventPublished(event_id=self.id, event_name=self.name)
+        )
+
+    def cancel(self) -> None:
+        if self.status == EventStatus.COMPLETED:
+            raise ValueError("Cannot cancel a completed event")
+        if self.status != EventStatus.PUBLISHED:
+            raise ValueError("Only published event can be cancelled")
+
+        self.status = EventStatus.CANCELLED
+        self._domain_events.append(
+            EventCancelled(event_id=self.id, event_name=self.name)
         )
