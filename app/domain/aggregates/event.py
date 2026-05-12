@@ -87,7 +87,7 @@ class Event:
         )
         if category is None:
             raise ValueError("Ticket category not found")
-        if self.status != EventStatus.COMPLETED:
+        if self.status == EventStatus.COMPLETED:
             raise ValueError("Only completed event can disable ticket category")
 
         category.disable()
