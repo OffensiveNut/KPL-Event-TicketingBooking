@@ -3,5 +3,6 @@ from dataclasses import dataclass
 
 @dataclass
 class TicketCategoryCreated:
-    id: str
+    event_id: str
+    category_id: str
     name: str

@@ -5,6 +5,7 @@ from app.domain.entities.ticket_category import TicketCategory
 from app.domain.events.event_cancelled import EventCancelled
 from app.domain.events.event_created import EventCreated
 from app.domain.events.event_published import EventPublished
+from app.domain.events.ticket_category_created import TicketCategoryCreated
 from app.domain.value_objects.date_range import DateRange
 from app.domain.value_objects.event_status import EventStatus
 
@@ -62,4 +63,19 @@ class Event:
         self.status = EventStatus.CANCELLED
         self._domain_events.append(
             EventCancelled(event_id=self.id, event_name=self.name)
+        )
+
+    def add_ticket_category(self, ticket_category: TicketCategory) -> None:
+        if self._total_quota() + ticket_category.quota > self.max_capacity:
+            raise ValueError("Total quota exceeds max capacity")
+        if ticket_category.sales_period.end_date > self.date.start_date:
+            raise ValueError("Sales period must end before or at the event start date")
+
+        self._ticket_categories.append(ticket_category)
+        self._domain_events.append(
+            TicketCategoryCreated(
+                event_id=self.id,
+                category_id=ticket_category.id,
+                name=ticket_category.name,
+            )
         )
