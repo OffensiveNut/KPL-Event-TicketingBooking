@@ -6,6 +6,7 @@ from app.domain.events.event_cancelled import EventCancelled
 from app.domain.events.event_created import EventCreated
 from app.domain.events.event_published import EventPublished
 from app.domain.events.ticket_category_created import TicketCategoryCreated
+from app.domain.events.ticket_category_disabled import TicketCategoryDisabled
 from app.domain.value_objects.date_range import DateRange
 from app.domain.value_objects.event_status import EventStatus
 
@@ -78,4 +79,18 @@ class Event:
                 category_id=ticket_category.id,
                 name=ticket_category.name,
             )
+        )
+
+    def disable_ticket_category(self, category_id: str) -> None:
+        category = next(
+            (c for c in self._ticket_categories if c.id == category_id), None
+        )
+        if category is None:
+            raise ValueError("Ticket category not found")
+        if self.status != EventStatus.COMPLETED:
+            raise ValueError("Only completed event can disable ticket category")
+
+        category.disable()
+        self._domain_events.append(
+            TicketCategoryDisabled(category_id=category_id, event_id=self.id)
         )

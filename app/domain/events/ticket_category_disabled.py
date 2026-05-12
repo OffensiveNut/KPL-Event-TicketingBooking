@@ -2,6 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass
-class EventCancelled:
+class TicketCategoryDisabled:
+    category_id: str
     event_id: str
-    event_name: str
