@@ -1,5 +1,6 @@
 import uuid
 
+from app.domain.events.refund_approved import RefundApproved
 from app.domain.events.refund_requested import RefundRequested
 from app.domain.value_objects.booking_id import BookingId
 from app.domain.value_objects.money import Money
@@ -17,3 +18,9 @@ class Refund:
         self._domain_events: list = []
         self._domain_events.append(RefundRequested(refund_id=self.id))
 
+    def approve(self):
+        if self.status != RefundStatus.REQUESTED:
+            raise ValueError("Cannot approve a refund that is not requested")
+        
+        self.status = RefundStatus.APPROVED
+        self._domain_events.append(RefundApproved(refund_id=self.id))
