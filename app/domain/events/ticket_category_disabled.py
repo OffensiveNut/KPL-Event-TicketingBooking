@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 
+from app.domain.value_objects.event_id import EventId
+from app.domain.value_objects.ticket_category_id import TicketCategoryId
+
 
 @dataclass
 class TicketCategoryDisabled:
-    category_id: str
-    event_id: str
+    category_id: TicketCategoryId
+    event_id: EventId

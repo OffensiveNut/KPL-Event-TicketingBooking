@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 
+from app.domain.value_objects.event_id import EventId
+
 
 @dataclass
 class EventCreated:
-    event_id: str
+    event_id: EventId
     event_name: str
