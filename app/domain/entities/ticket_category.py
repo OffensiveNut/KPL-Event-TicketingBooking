@@ -24,7 +24,7 @@ class TicketCategory:
         self.id = TicketCategoryId(str(uuid.uuid4()))
         self.name = name
         self.price = Money(price)
-        self._quota = quota
+        self.quota = quota
         self.sales_period = SalesPeriod(sales_start_date, sales_end_date)
         self.is_active = True
 

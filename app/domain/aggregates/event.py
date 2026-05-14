@@ -1,5 +1,6 @@
 import uuid
 from datetime import date
+from decimal import Decimal
 
 from app.domain.entities.ticket_category import TicketCategory
 from app.domain.events.event_cancelled import EventCancelled
@@ -8,7 +9,9 @@ from app.domain.events.event_published import EventPublished
 from app.domain.events.ticket_category_created import TicketCategoryCreated
 from app.domain.events.ticket_category_disabled import TicketCategoryDisabled
 from app.domain.value_objects.date_range import DateRange
+from app.domain.value_objects.event_id import EventId
 from app.domain.value_objects.event_status import EventStatus
+from app.domain.value_objects.ticket_category_id import TicketCategoryId
 
 
 class Event:
@@ -24,7 +27,7 @@ class Event:
         if max_capacity <= 0:
             raise ValueError("Max capacity must be greater than zero")
 
-        self.id = str(uuid.uuid4())
+        self.id = EventId(str(uuid.uuid4()))
         self.name = event_name
         self.description = description
         self.date = DateRange(start_date, end_date)
@@ -41,8 +44,6 @@ class Event:
         return sum(tc.quota for tc in self._ticket_categories)
 
     def publish(self) -> None:
-        if self.status == EventStatus.CANCELLED:
-            raise ValueError("Cannot publish a cancelled event")
         if self.status != EventStatus.DRAFT:
             raise ValueError("Event must be in draft status to be published")
         if not any(tc.is_active for tc in self._ticket_categories):
@@ -56,8 +57,6 @@ class Event:
         )
 
     def cancel(self) -> None:
-        if self.status == EventStatus.COMPLETED:
-            raise ValueError("Cannot cancel a completed event")
         if self.status != EventStatus.PUBLISHED:
             raise ValueError("Only published event can be cancelled")
 
@@ -66,11 +65,26 @@ class Event:
             EventCancelled(event_id=self.id, event_name=self.name)
         )
 
-    def add_ticket_category(self, ticket_category: TicketCategory) -> None:
-        if self._total_quota() + ticket_category.quota > self.max_capacity:
+    def add_ticket_category(
+        self,
+        name: str,
+        price: Decimal,
+        quota: int,
+        sales_start_date: date,
+        sales_end_date: date,
+    ) -> None:
+        if self._total_quota() + quota > self.max_capacity:
             raise ValueError("Total quota exceeds max capacity")
-        if ticket_category.sales_period.end_date > self.date.start_date:
+        if sales_end_date > self.date.start_date:
             raise ValueError("Sales period must end before or at the event start date")
+
+        ticket_category = TicketCategory(
+            name=name,
+            price=price,
+            quota=quota,
+            sales_start_date=sales_start_date,
+            sales_end_date=sales_end_date,
+        )
 
         self._ticket_categories.append(ticket_category)
         self._domain_events.append(
@@ -81,7 +95,7 @@ class Event:
             )
         )
 
-    def disable_ticket_category(self, category_id: str) -> None:
+    def disable_ticket_category(self, category_id: TicketCategoryId) -> None:
         category = next(
             (c for c in self._ticket_categories if c.id == category_id), None
         )
