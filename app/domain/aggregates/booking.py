@@ -47,6 +47,11 @@ class Booking:
             )
         )
 
+    def pull_domain_events(self) -> list:
+        events = self._domain_events.copy()
+        self._domain_events.clear()
+        return events
+
     def total_price(self) -> Money:
         total = self.ticket_price.multiply(self.ticket_quantity).add(self.service_fee)
         return total
