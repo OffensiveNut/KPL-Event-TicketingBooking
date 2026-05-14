@@ -10,9 +10,9 @@ from app.domain.events.ticket_category_created import TicketCategoryCreated
 from app.domain.events.ticket_category_disabled import TicketCategoryDisabled
 from app.domain.value_objects.date_range import DateRange
 from app.domain.value_objects.event_id import EventId
-from app.domain.value_objects.event_organizer_id import EventOrganizerId
 from app.domain.value_objects.event_status import EventStatus
 from app.domain.value_objects.ticket_category_id import TicketCategoryId
+from app.domain.value_objects.user_id import UserId
 
 
 class Event:
@@ -24,7 +24,7 @@ class Event:
         end_date: date,
         location: str,
         max_capacity: int,
-        event_organizer: EventOrganizerId,
+        event_organizer: UserId,
     ) -> None:
         if max_capacity <= 0:
             raise ValueError("Max capacity must be greater than zero")
