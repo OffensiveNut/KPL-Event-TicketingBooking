@@ -16,8 +16,6 @@ class TicketCategory:
         sales_start_date: date,
         sales_end_date: date,
     ):
-        if price < 0:
-            raise ValueError("Price must be non-negative")
         if quota <= 0:
             raise ValueError("Quota must be greater than 0")
 
