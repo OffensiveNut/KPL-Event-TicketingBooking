@@ -16,6 +16,7 @@ class Refund:
         self.booking_id = booking_id
         self.amount = amount
         self.status = RefundStatus.REQUESTED
+        self.rejection_reason = None
 
         self._domain_events: list = []
         self._domain_events.append(RefundRequested(refund_id=self.id))
@@ -35,6 +36,8 @@ class Refund:
     def reject(self, rejection_reason: str) -> None:
         if self.status != RefundStatus.REQUESTED:
             raise ValueError("Cannot reject a refund that is not requested")
+        if rejection_reason is None or rejection_reason.strip() == "":
+            raise ValueError("Rejection reason cannot be empty")
 
         self.status = RefundStatus.REJECTED
         self.rejection_reason = rejection_reason
