@@ -16,7 +16,8 @@ class Refund:
         self.booking_id = booking_id
         self.amount = amount
         self.status = RefundStatus.REQUESTED
-        self.rejection_reason = None
+        self.rejection_reason: str | None = None
+        self.payment_reference: str | None = None
 
         self._domain_events: list = []
         self._domain_events.append(RefundRequested(refund_id=self.id))
@@ -43,9 +44,12 @@ class Refund:
         self.rejection_reason = rejection_reason
         self._domain_events.append(RefundRejected(refund_id=self.id))
 
-    def paid_out(self) -> None:
+    def paid_out(self, payment_reference: str) -> None:
         if self.status != RefundStatus.APPROVED:
             raise ValueError("Cannot mark a refund as paid out that is not approved")
+        if payment_reference is None or payment_reference.strip() == "":
+            raise ValueError("Payment reference cannot be empty")
 
         self.status = RefundStatus.PAIDOUT
+        self.payment_reference = payment_reference
         self._domain_events.append(RefundPaidOut(refund_id=self.id))
