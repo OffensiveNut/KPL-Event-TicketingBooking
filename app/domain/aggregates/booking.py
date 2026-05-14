@@ -4,12 +4,14 @@ from datetime import datetime, timedelta
 from app.domain.entities.ticket import Ticket
 from app.domain.events.booking_expired import BookingExpired
 from app.domain.events.booking_paid import BookingPaid
+from app.domain.events.ticket_checked_in import TicketCheckedIn
 from app.domain.events.ticket_reserved import TicketReserved
 from app.domain.value_objects.booking_id import BookingId
 from app.domain.value_objects.booking_status import BookingStatus
 from app.domain.value_objects.event_id import EventId
 from app.domain.value_objects.money import Money
 from app.domain.value_objects.ticket_category_id import TicketCategoryId
+from app.domain.value_objects.ticket_id import TicketId
 from app.domain.value_objects.user_id import UserId
 
 
@@ -85,3 +87,14 @@ class Booking:
                 booking_id=self.id,
             )
         )
+
+    def check_in_ticket(self, ticket_id: TicketId) -> None:
+        if self.status != BookingStatus.PAID:
+            raise ValueError("Only paid bookings can be checked in")
+
+        ticket = next((t for t in self.tickets if t.id == ticket_id), None)
+
+        if ticket is None:
+            raise ValueError("Ticket not found")
+        ticket.check_in()
+        self._domain_events.append(TicketCheckedIn(ticket_id=ticket_id))

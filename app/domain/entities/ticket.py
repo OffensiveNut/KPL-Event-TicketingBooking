@@ -18,3 +18,8 @@ class Ticket:
         self.booking_id = booking_id
         self.event_id = event_id
         self.status = TicketStatus.ACTIVE
+
+    def check_in(self) -> None:
+        if self.status != TicketStatus.ACTIVE:
+            raise ValueError("Cannot check in a ticket that is not active")
+        self.status = TicketStatus.CHECKED_IN
