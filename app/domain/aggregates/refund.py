@@ -20,6 +20,11 @@ class Refund:
         self._domain_events: list = []
         self._domain_events.append(RefundRequested(refund_id=self.id))
 
+    def pull_domain_events(self) -> list:
+        events = self._domain_events.copy()
+        self._domain_events.clear()
+        return events
+
     def approve(self) -> None:
         if self.status != RefundStatus.REQUESTED:
             raise ValueError("Cannot approve a refund that is not requested")
