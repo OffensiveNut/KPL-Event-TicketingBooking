@@ -79,3 +79,35 @@ class SqlAlchemyEventRepository(EventRepository):
             status=event.status.value,
             ticket_categories=ticket_categories,
         )
+
+    def _to_domain(self, model: EventModel) -> Event:
+        event = Event(
+            event_name=model.name,
+            description=model.description,
+            start_date=model.start_date,
+            end_date=model.end_date,
+            location=model.location,
+            max_capacity=model.max_capacity,
+            event_organizer=UserId(model.organizer_id),
+        )
+
+        event.id = EventId(model.id)
+        event.status = EventStatus(model.status)
+        event._domain_events = []
+        event._ticket_categories = [
+            self._to_domain_ticket_category(category)
+            for category in model.ticket_categories
+        ]
+        return event
+
+    def _to_domain_ticket_category(self, model: TicketCategoryModel) -> TicketCategory:
+        category = TicketCategory(
+            name=model.name,
+            price=model.price,
+            quota=model.quota,
+            sales_start_date=model.sales_start_date,
+            sales_end_date=model.sales_end_date,
+        )
+        category.id = TicketCategoryId(model.id)
+        category.is_active = model.is_active
+        return category
