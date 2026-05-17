@@ -41,3 +41,22 @@ class BookingModel(Base):
 
     event: Mapped[EventModel] = relationship("EventModel")
     ticket_category: Mapped[TicketCategoryModel] = relationship("TicketCategoryModel")
+
+
+class TicketModel(Base):
+    __tablename__ = "tickets"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    booking_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("bookings.id", ondelete="CASCADE"), nullable=False
+    )
+    event_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("events.id", ondelete="CASCADE"), nullable=False
+    )
+    ticket_code: Mapped[str] = mapped_column(String(36), nullable=False, unique=True)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+
+    booking: Mapped[BookingModel] = relationship(
+        "BookingModel", back_populates="tickets"
+    )
+    event: Mapped[EventModel] = relationship("EventModel")
