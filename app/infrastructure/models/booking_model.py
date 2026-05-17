@@ -60,3 +60,20 @@ class TicketModel(Base):
         "BookingModel", back_populates="tickets"
     )
     event: Mapped[EventModel] = relationship("EventModel")
+
+
+class RefundModel(Base):
+    __tablename__ = "refunds"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    booking_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("bookings.id", ondelete="CASCADE"), nullable=False
+    )
+    amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    rejection_reason: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    payment_reference: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
+    booking: Mapped[BookingModel] = relationship(
+        "BookingModel", back_populates="refunds"
+    )
