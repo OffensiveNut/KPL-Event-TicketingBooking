@@ -30,3 +30,22 @@ class EventModel(Base):
         cascade="all, delete-orphan",
         lazy="selectin",
     )
+
+
+class TicketCategoryModel(Base):
+    __tablename__ = "ticket_categories"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    event_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("events.id", ondelete="CASCADE"), nullable=False
+    )
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    price: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    quota: Mapped[int] = mapped_column(Integer, nullable=False)
+    sales_start_date: Mapped[date] = mapped_column(Date, nullable=False)
+    sales_end_date: Mapped[date] = mapped_column(Date, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+    event: Mapped[EventModel] = relationship(
+        "EventModel", back_populates="ticket_categories"
+    )
