@@ -51,6 +51,10 @@ class Event:
     def _total_quota(self) -> int:
         return sum(tc.quota for tc in self._ticket_categories)
 
+    @property
+    def get_ticket_categories(self) -> list[TicketCategory]:
+        return self._ticket_categories.copy()
+
     def publish(self) -> None:
         if self.status != EventStatus.DRAFT:
             raise ValueError("Event must be in draft status to be published")
