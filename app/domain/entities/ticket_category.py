@@ -23,6 +23,7 @@ class TicketCategory:
         self.name = name
         self.price = Money(price)
         self.quota = quota
+        self.remaining_quota = quota
         self.sales_period = SalesPeriod(sales_start_date, sales_end_date)
         self.is_active = True
 
