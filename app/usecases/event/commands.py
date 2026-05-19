@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date
+from decimal import Decimal
 
 from app.domain.value_objects.event_id import EventId
 from app.domain.value_objects.user_id import UserId
@@ -24,3 +25,13 @@ class PublishEventCommand:
 @dataclass
 class CancelEventCommand:
     event_id: EventId
+
+
+@dataclass
+class CreateTicketCategoryCommand:
+    event_id: EventId
+    category_name: str
+    price: Decimal
+    quota: int
+    sales_start_date: date
+    sales_end_date: date

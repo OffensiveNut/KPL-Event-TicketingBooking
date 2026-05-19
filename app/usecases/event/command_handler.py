@@ -3,6 +3,7 @@ from app.domain.repositories.event_repository import EventRepository
 from app.usecases.event.commands import (
     CancelEventCommand,
     CreateEventCommand,
+    CreateTicketCategoryCommand,
     PublishEventCommand,
 )
 
@@ -45,3 +46,21 @@ class CancelEventCommandHandler:
         if event is None:
             raise ValueError(f"Event with id {command.event_id} not found")
         event.cancel()
+
+
+class CreateTicketCategoryCommandHandler:
+    def __init__(self, event_repository: EventRepository):
+        self._event_repository = event_repository
+
+    def handle(self, command: CreateTicketCategoryCommand) -> None:
+        event = self._event_repository.get_by_id(command.event_id)
+        if event is None:
+            raise ValueError(f"Event with id {command.event_id} not found")
+        event.add_ticket_category(
+            name=command.category_name,
+            price=command.price,
+            quota=command.quota,
+            sales_start_date=command.sales_start_date,
+            sales_end_date=command.sales_end_date,
+        )
+        self._event_repository.save(event)
