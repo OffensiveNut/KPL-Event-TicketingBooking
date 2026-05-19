@@ -4,6 +4,7 @@ from app.usecases.event.commands import (
     CancelEventCommand,
     CreateEventCommand,
     CreateTicketCategoryCommand,
+    DisableTicketCategoryCommand,
     PublishEventCommand,
 )
 
@@ -65,4 +66,17 @@ class CreateTicketCategoryCommandHandler:
             sales_start_date=command.sales_start_date,
             sales_end_date=command.sales_end_date,
         )
+        self._event_repository.save(event)
+
+
+class DisableTicketCategoryCommandHandler:
+    def __init__(self, event_repository: EventRepository):
+        self._event_repository = event_repository
+
+    def handle(self, command: DisableTicketCategoryCommand) -> None:
+        event = self._event_repository.get_by_id(command.event_id)
+        if event is None:
+            raise ValueError(f"Event with id {command.event_id} not found")
+
+        event.disable_ticket_category(command.category_id)
         self._event_repository.save(event)
