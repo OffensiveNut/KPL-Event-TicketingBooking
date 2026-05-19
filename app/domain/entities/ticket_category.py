@@ -28,3 +28,11 @@ class TicketCategory:
 
     def disable(self):
         self.is_active = False
+
+    def reserve(self, quantity: int):
+        if quantity > self.quota:
+            raise ValueError("Quantity exceeds quota")
+        self.quota -= quantity
+
+    def release(self, quantity: int):
+        self.quota += quantity
