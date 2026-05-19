@@ -19,3 +19,8 @@ class CreateEventCommand:
 @dataclass
 class PublishEventCommand:
     event_id: EventId
+
+
+@dataclass
+class CancelEventCommand:
+    event_id: EventId

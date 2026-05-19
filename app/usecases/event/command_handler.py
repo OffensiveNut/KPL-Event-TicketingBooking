@@ -34,3 +34,14 @@ class PublishEventCommandHandler:
         if event is None:
             raise ValueError(f"Event with id {command.event_id} not found")
         event.publish()
+
+
+class CancelEventCommandHandler:
+    def __init__(self, event_repository: EventRepository):
+        self._event_repository = event_repository
+
+    def handle(self, command: CancelEventCommand) -> None:
+        event = self._event_repository.get_by_id(command.event_id)
+        if event is None:
+            raise ValueError(f"Event with id {command.event_id} not found")
+        event.cancel()
