@@ -35,6 +35,7 @@ class PublishEventCommandHandler:
         if event is None:
             raise ValueError(f"Event with id {command.event_id} not found")
         event.publish()
+        self._event_repository.save(event)
 
 
 class CancelEventCommandHandler:
@@ -46,6 +47,7 @@ class CancelEventCommandHandler:
         if event is None:
             raise ValueError(f"Event with id {command.event_id} not found")
         event.cancel()
+        self._event_repository.save(event)
 
 
 class CreateTicketCategoryCommandHandler:
