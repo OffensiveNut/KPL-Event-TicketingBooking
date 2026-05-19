@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import date
 
+from app.domain.value_objects.event_id import EventId
 from app.domain.value_objects.user_id import UserId
 
 
@@ -13,3 +14,8 @@ class CreateEventCommand:
     end_date: date
     location: str
     max_capacity: int
+
+
+@dataclass
+class PublishEventCommand:
+    event_id: EventId
