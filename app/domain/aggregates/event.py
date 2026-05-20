@@ -55,6 +55,14 @@ class Event:
     def get_ticket_categories(self) -> list[TicketCategory]:
         return self._ticket_categories.copy()
 
+    def get_ticket_category_by_id(
+        self, ticket_category_id: str
+    ) -> TicketCategory | None:
+        return next(
+            (tc for tc in self._ticket_categories if tc.id == ticket_category_id),
+            None,
+        )
+
     def publish(self) -> None:
         if self.status != EventStatus.DRAFT:
             raise ValueError("Event must be in draft status to be published")
