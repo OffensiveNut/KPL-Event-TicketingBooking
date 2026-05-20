@@ -75,13 +75,27 @@ class PayBookingCommandHandler:
 
 
 class ExpireBookingCommandHandler:
-    def __init__(self, booking_repository: BookingRepository):
+    def __init__(
+        self, booking_repository: BookingRepository, event_repository: EventRepository
+    ):
         self.booking_repository = booking_repository
+        self.event_repository = event_repository
 
     def handle(self, command: ExpireBookingCommand) -> None:
         booking = self.booking_repository.get_by_id(command.booking_id)
         if not booking:
             raise ValueError("Booking not found")
 
+        event = self.event_repository.get_by_id(booking.event_id)
+        if not event:
+            raise ValueError("Event not found")
+
+        ticket_category = event.get_ticket_category_by_id(booking.ticket_category_id)
+        if not ticket_category:
+            raise ValueError("Ticket category not found")
+
         booking.expire()
+        ticket_category.release(booking.ticket_quantity)
+
+        self.event_repository.save(event)
         self.booking_repository.save(booking)
