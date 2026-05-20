@@ -56,10 +56,15 @@ class Event:
         return self._ticket_categories.copy()
 
     def get_ticket_category_by_id(
-        self, ticket_category_id: str
+        self, ticket_category_id: TicketCategoryId
     ) -> TicketCategory | None:
         return next(
-            (tc for tc in self._ticket_categories if tc.id == ticket_category_id),
+            (
+                tc
+                for tc in self._ticket_categories
+                if tc.id == ticket_category_id
+                if tc.is_active
+            ),
             None,
         )
 
