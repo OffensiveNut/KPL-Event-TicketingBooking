@@ -59,12 +59,7 @@ class Event:
         self, ticket_category_id: TicketCategoryId
     ) -> TicketCategory | None:
         return next(
-            (
-                tc
-                for tc in self._ticket_categories
-                if tc.id == ticket_category_id
-                if tc.is_active
-            ),
+            (tc for tc in self._ticket_categories if tc.id == ticket_category_id),
             None,
         )
 
