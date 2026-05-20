@@ -3,7 +3,11 @@ from app.domain.repositories.booking_repository import BookingRepository
 from app.domain.repositories.event_repository import EventRepository
 from app.domain.value_objects.event_status import EventStatus
 from app.domain.value_objects.money import Money
-from app.usecases.booking.commands import CreateBookingCommand, PayBookingCommand
+from app.usecases.booking.commands import (
+    CreateBookingCommand,
+    ExpireBookingCommand,
+    PayBookingCommand,
+)
 
 
 class CreateBookingCommandHandler:
@@ -67,4 +71,17 @@ class PayBookingCommandHandler:
             raise ValueError("Booking not found")
 
         booking.pay(Money(command.pay_amount))
+        self.booking_repository.save(booking)
+
+
+class ExpireBookingCommandHandler:
+    def __init__(self, booking_repository: BookingRepository):
+        self.booking_repository = booking_repository
+
+    def handle(self, command: ExpireBookingCommand) -> None:
+        booking = self.booking_repository.get_by_id(command.booking_id)
+        if not booking:
+            raise ValueError("Booking not found")
+
+        booking.expire()
         self.booking_repository.save(booking)

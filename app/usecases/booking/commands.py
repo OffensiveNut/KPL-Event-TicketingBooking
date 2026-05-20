@@ -21,3 +21,8 @@ class CreateBookingCommand:
 class PayBookingCommand:
     booking_id: BookingId
     pay_amount: Decimal
+
+
+@dataclass
+class ExpireBookingCommand:
+    booking_id: BookingId
