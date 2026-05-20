@@ -6,3 +6,8 @@ from app.domain.value_objects.booking_id import BookingId
 @dataclass
 class CalculateBookingQuery:
     booking_id: BookingId
+
+
+@dataclass
+class ViewPurchasedTicketsQuery:
+    booking_id: BookingId
