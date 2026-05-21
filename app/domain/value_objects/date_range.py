@@ -10,3 +10,6 @@ class DateRange:
     def __post_init__(self):
         if self.end_date <= self.start_date:
             raise ValueError("End date can't be earlier than start date")
+
+    def is_started(self, now: date) -> bool:
+        return self.start_date <= now

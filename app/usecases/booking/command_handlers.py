@@ -1,9 +1,12 @@
+from datetime import date
+
 from app.domain.aggregates.booking import Booking
 from app.domain.repositories.booking_repository import BookingRepository
 from app.domain.repositories.event_repository import EventRepository
 from app.domain.value_objects.event_status import EventStatus
 from app.domain.value_objects.money import Money
 from app.usecases.booking.commands import (
+    CheckinTicketCommand,
     CreateBookingCommand,
     ExpireBookingCommand,
     PayBookingCommand,
@@ -98,4 +101,28 @@ class ExpireBookingCommandHandler:
         ticket_category.release(booking.ticket_quantity)
 
         self.event_repository.save(event)
+        self.booking_repository.save(booking)
+
+
+class CheckinTicketCommandHandler:
+    def __init__(
+        self, booking_repository: BookingRepository, event_repository: EventRepository
+    ):
+        self.booking_repository = booking_repository
+        self.event_repository = event_repository
+
+    def handle(self, command: CheckinTicketCommand) -> None:
+        booking = self.booking_repository.get_by_id(command.booking_id)
+        if not booking:
+            raise ValueError("Booking not found")
+        if booking.event_id != command.event_id:
+            raise ValueError("Booking does not match event")
+
+        event = self.event_repository.get_by_id(command.event_id)
+        if not event:
+            raise ValueError("Event not found")
+        if event.date.is_started(date.today()):
+            raise ValueError("Event has not started yet")
+
+        booking.check_in_ticket(command.ticket_id)
         self.booking_repository.save(booking)
