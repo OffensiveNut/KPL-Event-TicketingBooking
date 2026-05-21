@@ -31,6 +31,5 @@ class ExpireBookingCommand:
 
 @dataclass
 class CheckinTicketCommand:
-    booking_id: BookingId
     ticket_id: TicketId
     event_id: EventId

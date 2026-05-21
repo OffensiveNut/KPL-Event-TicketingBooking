@@ -112,16 +112,19 @@ class CheckinTicketCommandHandler:
         self.event_repository = event_repository
 
     def handle(self, command: CheckinTicketCommand) -> None:
-        booking = self.booking_repository.get_by_id(command.booking_id)
+        booking = self.booking_repository.get_booking_by_ticket_id(command.ticket_id)
+
         if not booking:
             raise ValueError("Booking not found")
         if booking.event_id != command.event_id:
-            raise ValueError("Booking does not match event")
+            raise ValueError("Ticket does not match event")
 
         event = self.event_repository.get_by_id(command.event_id)
         if not event:
             raise ValueError("Event not found")
-        if event.date.is_started(date.today()):
+        if event.status == EventStatus.CANCELLED:
+            raise ValueError("Event has been cancelled")
+        if not event.date.is_started(date.today()):
             raise ValueError("Event has not started yet")
 
         booking.check_in_ticket(command.ticket_id)
