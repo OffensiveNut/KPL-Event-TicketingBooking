@@ -9,6 +9,7 @@ from app.domain.value_objects.event_status import EventStatus
 from app.domain.value_objects.ticket_status import TicketStatus
 from app.usecases.refund.commands import (
     ApproveRefundCommand,
+    MarkRefundAsPaidOutCommand,
     RejectRefundCommand,
     RequestRefundCommand,
 )
@@ -92,4 +93,21 @@ class RejectRefundCommandHandler:
             raise ValueError("Refund not found")
 
         refund.reject(rejection_reason=command.rejection_reason)
+        self._refund_repository.save(refund)
+
+
+class MarkRefundAsPaidOutCommandHandler:
+    def __init__(
+        self,
+        refund_repository: RefundRepository,
+    ):
+        self._refund_repository = refund_repository
+
+    def handle(self, command: MarkRefundAsPaidOutCommand) -> None:
+        refund = self._refund_repository.get_by_id(command.refund_id)
+
+        if refund is None:
+            raise ValueError("Refund not found")
+
+        refund.paid_out(payment_reference=command.payment_reference)
         self._refund_repository.save(refund)

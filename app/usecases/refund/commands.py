@@ -20,3 +20,9 @@ class ApproveRefundCommand:
 class RejectRefundCommand:
     refund_id: RefundId
     rejection_reason: str
+
+
+@dataclass
+class MarkRefundAsPaidOutCommand:
+    refund_id: RefundId
+    payment_reference: str
