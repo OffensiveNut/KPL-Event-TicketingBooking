@@ -7,7 +7,11 @@ from app.domain.repositories.refund_repository import RefundRepository
 from app.domain.value_objects.booking_status import BookingStatus
 from app.domain.value_objects.event_status import EventStatus
 from app.domain.value_objects.ticket_status import TicketStatus
-from app.usecases.refund.commands import ApproveRefundCommand, RequestRefundCommand
+from app.usecases.refund.commands import (
+    ApproveRefundCommand,
+    RejectRefundCommand,
+    RequestRefundCommand,
+)
 
 
 class RequestRefundCommandHandler:
@@ -65,10 +69,27 @@ class ApproveRefundCommandHandler:
             raise ValueError("Booking not found")
 
         refund.approve()
-        
+
         for ticket in booking.tickets:
             ticket.status = TicketStatus.CANCELLED
         booking.status = BookingStatus.REFUNDED
 
         self._booking_repository.save(booking)
+        self._refund_repository.save(refund)
+
+
+class RejectRefundCommandHandler:
+    def __init__(
+        self,
+        refund_repository: RefundRepository,
+    ):
+        self._refund_repository = refund_repository
+
+    def handle(self, command: RejectRefundCommand) -> None:
+        refund = self._refund_repository.get_by_id(command.refund_id)
+
+        if refund is None:
+            raise ValueError("Refund not found")
+
+        refund.reject(rejection_reason=command.rejection_reason)
         self._refund_repository.save(refund)

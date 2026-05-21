@@ -14,3 +14,9 @@ class RequestRefundCommand:
 @dataclass
 class ApproveRefundCommand:
     refund_id: RefundId
+
+
+@dataclass
+class RejectRefundCommand:
+    refund_id: RefundId
+    rejection_reason: str
