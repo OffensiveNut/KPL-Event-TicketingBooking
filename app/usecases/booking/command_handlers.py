@@ -5,6 +5,7 @@ from app.domain.repositories.booking_repository import BookingRepository
 from app.domain.repositories.event_repository import EventRepository
 from app.domain.value_objects.event_status import EventStatus
 from app.domain.value_objects.money import Money
+from app.domain.value_objects.ticket_status import TicketStatus
 from app.usecases.booking.commands import (
     CheckinTicketCommand,
     CreateBookingCommand,
@@ -116,10 +117,18 @@ class CheckinTicketCommandHandler:
 
         if not booking:
             raise ValueError("Booking not found")
-        if booking.event_id != command.event_id:
+
+        ticket = booking.get_ticket_by_id(command.ticket_id)
+
+        if not ticket:
+            raise ValueError("Ticket not found")
+        if ticket.status == TicketStatus.CHECKED_IN:
+            raise ValueError("Ticket has already been used")
+        if ticket.event_id != command.event_id:
             raise ValueError("Ticket does not match event")
 
         event = self.event_repository.get_by_id(command.event_id)
+
         if not event:
             raise ValueError("Event not found")
         if event.status == EventStatus.CANCELLED:
