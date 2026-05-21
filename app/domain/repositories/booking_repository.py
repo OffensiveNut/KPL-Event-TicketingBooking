@@ -3,7 +3,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 
 from app.domain.aggregates.booking import Booking
-from app.domain.entities.ticket import Ticket
 from app.domain.value_objects.booking_id import BookingId
 from app.domain.value_objects.event_id import EventId
 from app.domain.value_objects.ticket_id import TicketId
@@ -32,7 +31,3 @@ class BookingRepository(ABC):
     @abstractmethod
     def get_booking_by_ticket_id(self, ticket_id: TicketId) -> Booking | None:
         """Return a booking aggregate by its ticket id, or None if not found."""
-
-    @abstractmethod
-    def get_ticket_by_id(self, ticket_id: TicketId) -> Ticket | None:
-        """Return a ticket by its id, or None if not found."""

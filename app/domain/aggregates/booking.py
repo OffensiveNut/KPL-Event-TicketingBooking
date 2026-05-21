@@ -58,6 +58,10 @@ class Booking:
         total = self.ticket_price.multiply(self.ticket_quantity).add(self.service_fee)
         return total
 
+    def get_ticket_by_id(self, ticket_id: TicketId) -> Ticket | None:
+        ticket = next((t for t in self.tickets if t.id == ticket_id), None)
+        return ticket
+
     def pay(self, payment: Money) -> None:
         if self.status != BookingStatus.PENDING:
             raise ValueError("Only pending bookings can be paid")
