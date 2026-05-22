@@ -1,9 +1,12 @@
+import uuid
 from datetime import date
+from decimal import Decimal
 
 import pytest
 
 from app.domain.aggregates.event import Event
 from app.domain.entities.ticket_category import TicketCategory
+from app.domain.value_objects.user_id import UserId
 
 
 @pytest.fixture
@@ -16,6 +19,7 @@ def valid_event():
         end_date=date(2077, 12, 2),
         location="ITS Surabaya",
         max_capacity=100,
+        event_organizer=UserId(str(uuid.uuid4())),
     )
 
 
@@ -24,7 +28,7 @@ def valid_ticket_category():
     """Returns a valid TicketCategory with quota 50."""
     return TicketCategory(
         name="Regular Ticket",
-        price=150.0,
+        price=Decimal(150.0),
         quota=50,
         sales_start_date=date(2077, 1, 1),
         sales_end_date=date(2077, 9, 30),

@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 
 import pytest
 
@@ -15,7 +16,9 @@ def test_create_ticket_category_success(valid_ticket_category):
     - Each ticket category must have a name, price, quota, sales start date, and sales end date.
     """
     assert valid_ticket_category.name == "Regular Ticket"
-    assert valid_ticket_category.price == 150.0
+    from app.domain.value_objects.money import Money
+
+    assert valid_ticket_category.price == Money(Decimal(150.0))
     assert valid_ticket_category.quota == 50
     assert valid_ticket_category.sales_period.start_date == date(2077, 1, 1)
     assert valid_ticket_category.sales_period.end_date == date(2077, 9, 30)
@@ -27,7 +30,7 @@ def test_create_ticket_category_invalid_price():
     with pytest.raises(ValueError, match="Price must be non-negative"):
         TicketCategory(
             name="Freebie",
-            price=-10.0,
+            price=Decimal(-10.0),
             quota=10,
             sales_start_date=date(2077, 1, 1),
             sales_end_date=date(2077, 1, 15),
@@ -39,7 +42,7 @@ def test_create_ticket_category_invalid_quota():
     with pytest.raises(ValueError, match="Quota must be greater than 0"):
         TicketCategory(
             name="Empty",
-            price=10.0,
+            price=Decimal(10.0),
             quota=0,
             sales_start_date=date(2077, 1, 1),
             sales_end_date=date(2077, 1, 15),
@@ -50,7 +53,7 @@ def test_add_ticket_category_invalid_sales_period(valid_event):
     """US 4 Acceptance Criteria 5: The ticket sales period must end before or at the event start date."""
     late_category = TicketCategory(
         "Late",
-        100.0,
+        Decimal(100.0),
         50,
         date(2077, 1, 1),
         date(2077, 10, 10),  # 10-10 > 10-01 (event start)
@@ -64,7 +67,7 @@ def test_add_ticket_category_invalid_sales_period(valid_event):
 def test_add_ticket_category_exceeds_capacity(valid_event):
     """US 4 Acceptance Criteria 6: The total quota of all ticket categories must not exceed the maximum event capacity."""
     large_category = TicketCategory(
-        "VIP", 200.0, 150, date(2077, 1, 1), date(2077, 9, 30)
+        "VIP", Decimal(200.0), 150, date(2077, 1, 1), date(2077, 9, 30)
     )  # quota 150 > max_capacity 100
 
     with pytest.raises(ValueError, match="Total quota exceeds max capacity"):

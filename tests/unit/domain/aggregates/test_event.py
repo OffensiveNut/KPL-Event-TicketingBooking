@@ -1,3 +1,4 @@
+import uuid
 from datetime import date
 
 import pytest
@@ -7,6 +8,7 @@ from app.domain.events.event_cancelled import EventCancelled
 from app.domain.events.event_created import EventCreated
 from app.domain.events.event_published import EventPublished
 from app.domain.value_objects.event_status import EventStatus
+from app.domain.value_objects.user_id import UserId
 
 
 def test_create_event_success(valid_event):
@@ -35,13 +37,22 @@ def test_create_event_invalid_date():
             end_date=date(2077, 10, 1),
             location="Loc",
             max_capacity=100,
+            event_organizer=UserId(str(uuid.uuid4())),
         )
 
 
 def test_create_event_invalid_capacity():
     """US 1 Acceptance Criteria: The event cannot be created if the maximum capacity is less than or equal to zero."""
     with pytest.raises(ValueError, match="Max capacity must be greater than zero"):
-        Event("Bad Event", "Desc", date(2077, 1, 1), date(2077, 1, 2), "Loc", 0)
+        Event(
+            event_name="Bad Event",
+            description="Desc",
+            start_date=date(2077, 1, 1),
+            end_date=date(2077, 1, 2),
+            location="Loc",
+            max_capacity=0,
+            event_organizer=UserId(str(uuid.uuid4())),
+        )
 
 
 def test_publish_event_success(valid_event, valid_ticket_category):
@@ -82,7 +93,7 @@ def test_publish_event_fails_if_cancelled(valid_event, valid_ticket_category):
     valid_event.publish()
     valid_event.cancel()  # Status is now cancelled
 
-    with pytest.raises(ValueError, match="Cannot publish a cancelled event"):
+    with pytest.raises(ValueError, match="Event must be in draft status to be published"):
         valid_event.publish()
 
 
@@ -106,5 +117,5 @@ def test_cancel_event_fails_if_completed(valid_event, valid_ticket_category):
     valid_event.publish()
     valid_event.status = EventStatus.COMPLETED
 
-    with pytest.raises(ValueError, match="Cannot cancel a completed event"):
+    with pytest.raises(ValueError, match="Only published event can be cancelled"):
         valid_event.cancel()
