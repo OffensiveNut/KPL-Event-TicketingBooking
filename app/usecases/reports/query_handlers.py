@@ -25,7 +25,7 @@ class ViewEventSalesReportQueryHandler:
         self._event_repository = event_repository
         self._booking_repository = booking_repository
 
-    def handle(self, query: ViewEventSalesReportQuery):
+    def handle(self, query: ViewEventSalesReportQuery) -> EventSalesReportDTO | None:
         event = self._event_repository.get_by_id(query.event_id)
 
         if not event:
