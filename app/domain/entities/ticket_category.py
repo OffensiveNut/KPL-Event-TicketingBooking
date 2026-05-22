@@ -37,3 +37,6 @@ class TicketCategory:
 
     def release(self, quantity: int):
         self.quota += quantity
+
+    def quota_sold(self):
+        return self.quota - self.remaining_quota
