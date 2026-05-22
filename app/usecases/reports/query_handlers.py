@@ -4,12 +4,18 @@ from decimal import Decimal
 from app.domain.repositories.booking_repository import BookingRepository
 from app.domain.repositories.event_repository import EventRepository
 from app.domain.value_objects.booking_status import BookingStatus
+from app.domain.value_objects.ticket_status import TicketStatus
 from app.usecases.reports.dtos import (
     BookingReportDTO,
     EventSalesReportDTO,
+    ParticipantDTO,
+    ParticipantTicketDetailsDTO,
     TicketCategorySalesDTO,
 )
-from app.usecases.reports.queries import ViewEventSalesReportQuery
+from app.usecases.reports.queries import (
+    ViewEventParticipantsQuery,
+    ViewEventSalesReportQuery,
+)
 
 
 class ViewEventSalesReportQueryHandler:
@@ -61,3 +67,31 @@ class ViewEventSalesReportQueryHandler:
                 for status, count in status_counter.items()
             ],
         )
+
+
+class ViewEventParticipantsQueryHandler:
+    def __init__(self, booking_repository: BookingRepository):
+        self._booking_repository = booking_repository
+
+    def handle(self, query: ViewEventParticipantsQuery) -> list[ParticipantDTO]:
+        bookings = self._booking_repository.list_by_event(query.event_id)
+
+        if not bookings:
+            return []
+
+        active_participants = [b for b in bookings if b.status == BookingStatus.PAID]
+
+        return [
+            ParticipantDTO(
+                customer_name=b.customer_name,
+                ticket_category_name=b.ticket_category_name,
+                ticket_details=[
+                    ParticipantTicketDetailsDTO(
+                        ticket_code=ticket.ticket_code.value,
+                        is_check_in=ticket.status == TicketStatus.CHECKED_IN,
+                    )
+                    for ticket in b.tickets
+                ],
+            )
+            for b in active_participants
+        ]

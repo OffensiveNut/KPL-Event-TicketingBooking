@@ -23,3 +23,16 @@ class EventSalesReportDTO:
     name: str
     ticket_categories: list[TicketCategorySalesDTO]
     bookings: list[BookingReportDTO]
+
+
+@dataclass
+class ParticipantTicketDetailsDTO:
+    ticket_code: str
+    is_check_in: bool
+
+
+@dataclass
+class ParticipantDTO:
+    customer_name: str
+    ticket_category_name: str
+    ticket_details: list[ParticipantTicketDetailsDTO]

@@ -6,3 +6,8 @@ from app.domain.value_objects.event_id import EventId
 @dataclass
 class ViewEventSalesReportQuery:
     event_id: EventId
+
+
+@dataclass
+class ViewEventParticipantsQuery:
+    event_id: EventId
