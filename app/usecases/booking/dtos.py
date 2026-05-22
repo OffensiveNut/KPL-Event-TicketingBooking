@@ -3,12 +3,12 @@ from decimal import Decimal
 
 
 @dataclass
-class BookingTotalPrice:
+class BookingTotalPriceDTO:
     total_price: Decimal
 
 
 @dataclass
-class TicketSummary:
+class TicketSummaryDTO:
     ticket_id: str
     ticket_code: str
     event_id: str
