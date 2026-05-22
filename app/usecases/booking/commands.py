@@ -12,10 +12,12 @@ from app.domain.value_objects.user_id import UserId
 class CreateBookingCommand:
     event_id: EventId
     ticket_category_id: TicketCategoryId
+    ticket_category_name: str
     ticket_quantity: int
     price: Decimal
     service_fee: Decimal
     customer_id: UserId
+    customer_name: str
 
 
 @dataclass

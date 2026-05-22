@@ -52,10 +52,12 @@ class CreateBookingCommandHandler:
         booking = Booking(
             event_id=command.event_id,
             ticket_category_id=command.ticket_category_id,
+            ticket_category_name=command.ticket_category_name,
             ticket_quantity=command.ticket_quantity,
             ticket_price=Money(command.price),
             service_fee=Money(command.service_fee),
             customer_id=command.customer_id,
+            customer_name=command.customer_name,
         )
 
         ticket_category.reserve(command.ticket_quantity)

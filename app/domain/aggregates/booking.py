@@ -19,19 +19,23 @@ class Booking:
     def __init__(
         self,
         ticket_category_id: TicketCategoryId,
+        ticket_category_name: str,
         event_id: EventId,
         ticket_quantity: int,
         ticket_price: Money,
         service_fee: Money,
         customer_id: UserId,
+        customer_name: str,
     ) -> None:
         if ticket_quantity <= 0:
             raise ValueError("Ticket quantity must be greater than 0")
 
         self.id = BookingId(str(uuid.uuid4()))
         self.customer_id = customer_id
+        self.customer_name = customer_name        
         self.event_id = event_id
         self.ticket_category_id = ticket_category_id
+        self.ticket_category_name = ticket_category_name        
         self.status = BookingStatus.PENDING
         self.payment_deadline = datetime.now() + timedelta(minutes=15)
         self.ticket_quantity = ticket_quantity
