@@ -28,6 +28,7 @@ class BookingRepository(ABC):
     def list_by_event(self, event_id: EventId) -> list[Booking]:
         """Return all bookings for a given event."""
 
+    # TODO: Implement this method at infrastructure layer
     @abstractmethod
     def get_booking_by_ticket_id(self, ticket_id: TicketId) -> Booking | None:
         """Return a booking aggregate by its ticket id, or None if not found."""
