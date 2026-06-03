@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from app.domain.aggregates.booking import Booking
 from app.domain.value_objects.booking_id import BookingId
 from app.domain.value_objects.event_id import EventId
-from app.domain.value_objects.ticket_id import TicketId
+from app.domain.value_objects.ticket_code import TicketCode
 from app.domain.value_objects.user_id import UserId
 
 
@@ -29,5 +29,5 @@ class BookingRepository(ABC):
         """Return all bookings for a given event."""
 
     @abstractmethod
-    def get_booking_by_ticket_id(self, ticket_id: TicketId) -> Booking | None:
-        """Return a booking aggregate by its ticket id, or None if not found."""
+    def get_booking_by_ticket_code(self, ticket_code: TicketCode) -> Booking | None:
+        """Return a booking aggregate by a ticket code it issued, or None if not found."""

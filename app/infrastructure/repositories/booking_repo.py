@@ -67,12 +67,12 @@ class SqlAlchemyBookingRepository(BookingRepository):
         models = self._session.scalars(stmt).all()
         return [self._to_domain(model) for model in models]
 
-    def get_booking_by_ticket_id(self, ticket_id: TicketId) -> Booking | None:
+    def get_booking_by_ticket_code(self, ticket_code: TicketCode) -> Booking | None:
         stmt = (
             select(BookingModel)
             .join(TicketModel)
             .options(selectinload(BookingModel.tickets))
-            .where(TicketModel.id == ticket_id.value)
+            .where(TicketModel.ticket_code == ticket_code.value)
         )
         model = self._session.scalar(stmt)
         if model is None:
