@@ -17,9 +17,11 @@ class BookingModel(Base):
         String(36), ForeignKey("events.id", ondelete="CASCADE"), nullable=False
     )
     customer_id: Mapped[str] = mapped_column(String(36), nullable=False)
+    customer_name: Mapped[str] = mapped_column(String(255), nullable=False)
     ticket_category_id: Mapped[str] = mapped_column(
         String(36), ForeignKey("ticket_categories.id"), nullable=False
     )
+    ticket_category_name: Mapped[str] = mapped_column(String(100), nullable=False)
     status: Mapped[str] = mapped_column(String(32), nullable=False)
     payment_deadline: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     ticket_quantity: Mapped[int] = mapped_column(Integer, nullable=False)

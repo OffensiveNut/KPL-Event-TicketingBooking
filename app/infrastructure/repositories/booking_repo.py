@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from decimal import Decimal
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
@@ -93,7 +95,9 @@ class SqlAlchemyBookingRepository(BookingRepository):
             id=booking.id.value,
             event_id=booking.event_id.value,
             customer_id=booking.customer_id.value,
+            customer_name=booking.customer_name,
             ticket_category_id=booking.ticket_category_id.value,
+            ticket_category_name=booking.ticket_category_name,
             status=booking.status.value,
             payment_deadline=booking.payment_deadline,
             ticket_quantity=booking.ticket_quantity,
@@ -105,11 +109,13 @@ class SqlAlchemyBookingRepository(BookingRepository):
     def _to_domain(self, model: BookingModel) -> Booking:
         booking = Booking(
             ticket_category_id=TicketCategoryId(model.ticket_category_id),
+            ticket_category_name=model.ticket_category_name,
             event_id=EventId(model.event_id),
             ticket_quantity=model.ticket_quantity,
-            ticket_price=Money(model.ticket_price),
-            service_fee=Money(model.service_fee),
+            ticket_price=Money(Decimal(model.ticket_price)),
+            service_fee=Money(Decimal(model.service_fee)),
             customer_id=UserId(model.customer_id),
+            customer_name=model.customer_name,
         )
         booking.id = BookingId(model.id)
         booking.status = BookingStatus(model.status)
