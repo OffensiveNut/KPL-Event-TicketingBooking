@@ -65,6 +65,18 @@ class SqlAlchemyBookingRepository(BookingRepository):
         models = self._session.scalars(stmt).all()
         return [self._to_domain(model) for model in models]
 
+    def get_booking_by_ticket_id(self, ticket_id: TicketId) -> Booking | None:
+        stmt = (
+            select(BookingModel)
+            .join(TicketModel)
+            .options(selectinload(BookingModel.tickets))
+            .where(TicketModel.id == ticket_id.value)
+        )
+        model = self._session.scalar(stmt)
+        if model is None:
+            return None
+        return self._to_domain(model)
+
     def _to_model(self, booking: Booking) -> BookingModel:
         tickets = [
             TicketModel(
