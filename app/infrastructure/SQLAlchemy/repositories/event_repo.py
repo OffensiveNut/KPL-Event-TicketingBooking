@@ -12,7 +12,7 @@ from app.domain.value_objects.event_id import EventId
 from app.domain.value_objects.event_status import EventStatus
 from app.domain.value_objects.ticket_category_id import TicketCategoryId
 from app.domain.value_objects.user_id import UserId
-from app.infrastructure.models.event_model import EventModel, TicketCategoryModel
+from app.infrastructure.SQLAlchemy.models.event_model import EventModel, TicketCategoryModel
 
 
 class SqlAlchemyEventRepository(EventRepository):

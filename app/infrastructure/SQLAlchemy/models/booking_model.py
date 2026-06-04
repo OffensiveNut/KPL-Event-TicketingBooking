@@ -6,7 +6,7 @@ from decimal import Decimal
 from sqlalchemy import DateTime, ForeignKey, Integer, Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.infrastructure.models.event_model import Base, EventModel, TicketCategoryModel
+from app.infrastructure.SQLAlchemy.models.event_model import Base, EventModel, TicketCategoryModel
 
 
 class BookingModel(Base):

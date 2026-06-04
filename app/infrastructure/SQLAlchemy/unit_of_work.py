@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 
 from app.application.ports.unit_of_work import UnitOfWork
-from app.infrastructure.repositories.booking_repo import SqlAlchemyBookingRepository
-from app.infrastructure.repositories.event_repo import SqlAlchemyEventRepository
-from app.infrastructure.repositories.refund_repo import SqlAlchemyRefundRepository
+from app.infrastructure.SQLAlchemy.repositories.booking_repo import SqlAlchemyBookingRepository
+from app.infrastructure.SQLAlchemy.repositories.event_repo import SqlAlchemyEventRepository
+from app.infrastructure.SQLAlchemy.repositories.refund_repo import SqlAlchemyRefundRepository
 
 
 class SqlAlchemyUnitOfWork(UnitOfWork):

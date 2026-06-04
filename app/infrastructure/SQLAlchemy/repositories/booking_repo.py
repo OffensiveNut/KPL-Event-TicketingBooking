@@ -17,7 +17,7 @@ from app.domain.value_objects.ticket_code import TicketCode
 from app.domain.value_objects.ticket_id import TicketId
 from app.domain.value_objects.ticket_status import TicketStatus
 from app.domain.value_objects.user_id import UserId
-from app.infrastructure.models.booking_model import BookingModel, TicketModel
+from app.infrastructure.SQLAlchemy.models.booking_model import BookingModel, TicketModel
 
 
 class SqlAlchemyBookingRepository(BookingRepository):
