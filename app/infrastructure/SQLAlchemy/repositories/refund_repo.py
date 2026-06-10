@@ -9,7 +9,7 @@ from app.domain.value_objects.booking_id import BookingId
 from app.domain.value_objects.money import Money
 from app.domain.value_objects.refund_id import RefundId
 from app.domain.value_objects.refund_status import RefundStatus
-from app.infrastructure.models.booking_model import RefundModel
+from app.infrastructure.SQLAlchemy.models.booking_model import RefundModel
 
 
 class SqlAlchemyRefundRepository(RefundRepository):
