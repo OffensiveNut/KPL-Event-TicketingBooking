@@ -1,6 +1,16 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
+from app.application.usecases.booking.command_handlers import (
+    CheckinTicketCommandHandler,
+    CreateBookingCommandHandler,
+    ExpireBookingCommandHandler,
+    PayBookingCommandHandler,
+)
+from app.application.usecases.booking.query_handlers import (
+    CalculateBookingQueryHandler,
+    ViewPurchasedTicketsQueryHandler,
+)
 from app.application.usecases.event.command_handlers import (
     CancelEventCommandHandler,
     CreateEventCommandHandler,
@@ -16,16 +26,22 @@ from app.application.usecases.reports.query_handlers import (
     ViewEventParticipantsQueryHandler,
     ViewEventSalesReportQueryHandler,
 )
-from app.infrastructure.database import get_db
-from app.infrastructure.repositories.booking_repo import SqlAlchemyBookingRepository
-from app.infrastructure.repositories.event_repo import SqlAlchemyEventRepository
+from app.infrastructure.SQLAlchemy.database import get_db
+from app.infrastructure.SQLAlchemy.repositories.booking_repo import (
+    SqlAlchemyBookingRepository,
+)
+from app.infrastructure.SQLAlchemy.repositories.event_repo import (
+    SqlAlchemyEventRepository,
+)
 
 
 def get_event_repository(db: Session = Depends(get_db)) -> SqlAlchemyEventRepository:
     return SqlAlchemyEventRepository(db)
 
 
-def get_booking_repository(db: Session = Depends(get_db)) -> SqlAlchemyBookingRepository:
+def get_booking_repository(
+    db: Session = Depends(get_db),
+) -> SqlAlchemyBookingRepository:
     return SqlAlchemyBookingRepository(db)
 
 
@@ -82,3 +98,42 @@ def get_participants_handler(
     booking_repo=Depends(get_booking_repository),
 ) -> ViewEventParticipantsQueryHandler:
     return ViewEventParticipantsQueryHandler(booking_repo)
+
+
+def get_create_booking_handler(
+    booking_repo=Depends(get_booking_repository),
+    event_repo=Depends(get_event_repository),
+) -> CreateBookingCommandHandler:
+    return CreateBookingCommandHandler(booking_repo, event_repo)
+
+
+def get_pay_booking_handler(
+    booking_repo=Depends(get_booking_repository),
+) -> PayBookingCommandHandler:
+    return PayBookingCommandHandler(booking_repo)
+
+
+def get_expire_booking_handler(
+    booking_repo=Depends(get_booking_repository),
+    event_repo=Depends(get_event_repository),
+) -> ExpireBookingCommandHandler:
+    return ExpireBookingCommandHandler(booking_repo, event_repo)
+
+
+def get_checkin_ticket_handler(
+    booking_repo=Depends(get_booking_repository),
+    event_repo=Depends(get_event_repository),
+) -> CheckinTicketCommandHandler:
+    return CheckinTicketCommandHandler(booking_repo, event_repo)
+
+
+def get_view_purchased_tickets_handler(
+    booking_repo=Depends(get_booking_repository),
+) -> ViewPurchasedTicketsQueryHandler:
+    return ViewPurchasedTicketsQueryHandler(booking_repo)
+
+
+def get_calculate_booking_handler(
+    booking_repo=Depends(get_booking_repository),
+) -> CalculateBookingQueryHandler:
+    return CalculateBookingQueryHandler(booking_repo)
