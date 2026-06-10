@@ -1,7 +1,14 @@
+from app.application.usecases.event.dtos import (
+    EventDetailsDTO,
+    EventSummaryDTO,
+    TicketCategoryDTO,
+)
+from app.application.usecases.event.queries import (
+    GetAllAvailableEventsQuery,
+    GetEventDetailsQuery,
+)
 from app.domain.entities.ticket_category import TicketCategory
 from app.domain.repositories.event_repository import EventRepository
-from app.usecases.event.dtos import EventDetailsDTO, EventSummaryDTO, TicketCategoryDTO
-from app.usecases.event.queries import GetAllAvailableEventsQuery, GetEventDetailsQuery
 
 
 class GetAllAvailableEventsQueryHandler:

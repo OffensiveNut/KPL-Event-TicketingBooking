@@ -7,7 +7,7 @@ from app.domain.repositories.refund_repository import RefundRepository
 from app.domain.value_objects.booking_status import BookingStatus
 from app.domain.value_objects.event_status import EventStatus
 from app.domain.value_objects.ticket_status import TicketStatus
-from app.usecases.refund.commands import (
+from app.application.usecases.refund.commands import (
     ApproveRefundCommand,
     MarkRefundAsPaidOutCommand,
     RejectRefundCommand,

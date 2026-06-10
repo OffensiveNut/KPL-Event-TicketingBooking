@@ -1,17 +1,17 @@
 from datetime import date
 
+from app.application.usecases.booking.commands import (
+    CheckinTicketCommand,
+    CreateBookingCommand,
+    ExpireBookingCommand,
+    PayBookingCommand,
+)
 from app.domain.aggregates.booking import Booking
 from app.domain.repositories.booking_repository import BookingRepository
 from app.domain.repositories.event_repository import EventRepository
 from app.domain.value_objects.event_status import EventStatus
 from app.domain.value_objects.money import Money
 from app.domain.value_objects.ticket_status import TicketStatus
-from app.usecases.booking.commands import (
-    CheckinTicketCommand,
-    CreateBookingCommand,
-    ExpireBookingCommand,
-    PayBookingCommand,
-)
 
 
 class CreateBookingCommandHandler:
@@ -115,7 +115,9 @@ class CheckinTicketCommandHandler:
         self.event_repository = event_repository
 
     def handle(self, command: CheckinTicketCommand) -> None:
-        booking = self.booking_repository.get_booking_by_ticket_id(command.ticket_id)
+        booking = self.booking_repository.get_booking_by_ticket_code(
+            command.ticket_code
+        )
 
         if not booking:
             raise ValueError("Booking not found")

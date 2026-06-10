@@ -1,7 +1,7 @@
 from app.domain.repositories.booking_repository import BookingRepository
 from app.domain.value_objects.booking_status import BookingStatus
-from app.usecases.booking.dtos import BookingTotalPriceDTO, TicketSummaryDTO
-from app.usecases.booking.queries import (
+from app.application.usecases.booking.dtos import BookingTotalPriceDTO, TicketSummaryDTO
+from app.application.usecases.booking.queries import (
     CalculateBookingQuery,
     ViewPurchasedTicketsQuery,
 )

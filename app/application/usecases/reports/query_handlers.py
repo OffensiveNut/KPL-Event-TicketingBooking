@@ -5,14 +5,14 @@ from app.domain.repositories.booking_repository import BookingRepository
 from app.domain.repositories.event_repository import EventRepository
 from app.domain.value_objects.booking_status import BookingStatus
 from app.domain.value_objects.ticket_status import TicketStatus
-from app.usecases.reports.dtos import (
+from app.application.usecases.reports.dtos import (
     BookingReportDTO,
     EventSalesReportDTO,
     ParticipantDTO,
     ParticipantTicketDetailsDTO,
     TicketCategorySalesDTO,
 )
-from app.usecases.reports.queries import (
+from app.application.usecases.reports.queries import (
     ViewEventParticipantsQuery,
     ViewEventSalesReportQuery,
 )

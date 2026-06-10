@@ -1,12 +1,12 @@
-from app.domain.aggregates.event import Event
-from app.domain.repositories.event_repository import EventRepository
-from app.usecases.event.commands import (
+from app.application.usecases.event.commands import (
     CancelEventCommand,
     CreateEventCommand,
     CreateTicketCategoryCommand,
     DisableTicketCategoryCommand,
     PublishEventCommand,
 )
+from app.domain.aggregates.event import Event
+from app.domain.repositories.event_repository import EventRepository
 
 
 class CreateEventCommandHandler:
