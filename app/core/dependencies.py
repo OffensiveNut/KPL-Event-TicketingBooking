@@ -22,6 +22,12 @@ from app.application.usecases.event.query_handlers import (
     GetAllAvailableEventsQueryHandler,
     GetEventDetailsQueryHandler,
 )
+from app.application.usecases.refund.command_handlers import (
+    ApproveRefundCommandHandler,
+    MarkRefundAsPaidOutCommandHandler,
+    RejectRefundCommandHandler,
+    RequestRefundCommandHandler,
+)
 from app.application.usecases.reports.query_handlers import (
     ViewEventParticipantsQueryHandler,
     ViewEventSalesReportQueryHandler,
@@ -32,6 +38,9 @@ from app.infrastructure.SQLAlchemy.repositories.booking_repo import (
 )
 from app.infrastructure.SQLAlchemy.repositories.event_repo import (
     SqlAlchemyEventRepository,
+)
+from app.infrastructure.SQLAlchemy.repositories.refund_repo import (
+    SqlAlchemyRefundRepository,
 )
 
 
@@ -98,6 +107,39 @@ def get_participants_handler(
     booking_repo=Depends(get_booking_repository),
 ) -> ViewEventParticipantsQueryHandler:
     return ViewEventParticipantsQueryHandler(booking_repo)
+
+
+def get_refund_repository(
+    db: Session = Depends(get_db),
+) -> SqlAlchemyRefundRepository:
+    return SqlAlchemyRefundRepository(db)
+
+
+def get_request_refund_handler(
+    booking_repo=Depends(get_booking_repository),
+    event_repo=Depends(get_event_repository),
+    refund_repo=Depends(get_refund_repository),
+) -> RequestRefundCommandHandler:
+    return RequestRefundCommandHandler(booking_repo, event_repo, refund_repo)
+
+
+def get_approve_refund_handler(
+    refund_repo=Depends(get_refund_repository),
+    booking_repo=Depends(get_booking_repository),
+) -> ApproveRefundCommandHandler:
+    return ApproveRefundCommandHandler(refund_repo, booking_repo)
+
+
+def get_reject_refund_handler(
+    refund_repo=Depends(get_refund_repository),
+) -> RejectRefundCommandHandler:
+    return RejectRefundCommandHandler(refund_repo)
+
+
+def get_mark_refund_paid_out_handler(
+    refund_repo=Depends(get_refund_repository),
+) -> MarkRefundAsPaidOutCommandHandler:
+    return MarkRefundAsPaidOutCommandHandler(refund_repo)
 
 
 def get_create_booking_handler(
