@@ -25,6 +25,7 @@ from app.application.usecases.reports.queries import (
 )
 from app.core.dependencies import (
     get_available_events_handler,
+    get_cancel_event_handler,
     get_create_event_handler,
     get_create_ticket_category_handler,
     get_disable_ticket_category_handler,
@@ -70,7 +71,7 @@ def publish_event(event_id: str, handler=Depends(get_publish_event_handler)):
 
 
 @router.post("/{event_id}/cancel", status_code=200)
-def cancel_event(event_id: str, handler=Depends(get_publish_event_handler)):
+def cancel_event(event_id: str, handler=Depends(get_cancel_event_handler)):
     command = CancelEventCommand(event_id=EventId(event_id))
     try:
         handler.handle(command)

@@ -91,7 +91,7 @@ def checkin_booking(
     body: CheckinTicketSchema, handler=Depends(get_checkin_ticket_handler)
 ):
     command = CheckinTicketCommand(
-        ticket_id=TicketId(body.ticket_code),
+        ticket_id=TicketId(body.ticket_id),
         ticket_code=TicketCode(body.ticket_code),
         event_id=EventId(body.event_id),
     )

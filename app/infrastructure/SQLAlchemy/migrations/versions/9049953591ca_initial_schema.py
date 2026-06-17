@@ -39,6 +39,7 @@ def upgrade() -> None:
     sa.Column('name', sa.String(length=100), nullable=False),
     sa.Column('price', sa.Numeric(precision=12, scale=2), nullable=False),
     sa.Column('quota', sa.Integer(), nullable=False),
+    sa.Column('remaining_quota', sa.Integer(), nullable=False),
     sa.Column('sales_start_date', sa.Date(), nullable=False),
     sa.Column('sales_end_date', sa.Date(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),

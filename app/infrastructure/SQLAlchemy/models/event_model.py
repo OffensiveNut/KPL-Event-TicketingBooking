@@ -42,6 +42,7 @@ class TicketCategoryModel(Base):
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     price: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
     quota: Mapped[int] = mapped_column(Integer, nullable=False)
+    remaining_quota: Mapped[int] = mapped_column(Integer, nullable=False)
     sales_start_date: Mapped[date] = mapped_column(Date, nullable=False)
     sales_end_date: Mapped[date] = mapped_column(Date, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)

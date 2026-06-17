@@ -60,6 +60,7 @@ class SqlAlchemyEventRepository(EventRepository):
                 name=category.name,
                 price=category.price.amount,
                 quota=category.quota,
+                remaining_quota=category.remaining_quota,
                 sales_start_date=category.sales_period.start_date,
                 sales_end_date=category.sales_period.end_date,
                 is_active=category.is_active,
@@ -110,4 +111,5 @@ class SqlAlchemyEventRepository(EventRepository):
         )
         category.id = TicketCategoryId(model.id)
         category.is_active = model.is_active
+        category.remaining_quota = model.remaining_quota
         return category

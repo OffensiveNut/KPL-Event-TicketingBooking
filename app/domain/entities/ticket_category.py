@@ -31,12 +31,12 @@ class TicketCategory:
         self.is_active = False
 
     def reserve(self, quantity: int):
-        if quantity > self.quota:
-            raise ValueError("Quantity exceeds quota")
-        self.quota -= quantity
+        if quantity > self.remaining_quota:
+            raise ValueError("Quantity exceeds remaining quota")
+        self.remaining_quota -= quantity
 
     def release(self, quantity: int):
-        self.quota += quantity
+        self.remaining_quota += quantity
 
     def quota_sold(self):
         return self.quota - self.remaining_quota
