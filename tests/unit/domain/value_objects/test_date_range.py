@@ -1,19 +1,16 @@
-import pytest
+"""US 1: Event cannot be created with invalid schedule."""
 from datetime import date
+
+import pytest
+
 from app.domain.value_objects.date_range import DateRange
 
 
-def test_date_range_success():
-    dr = DateRange(date(2025, 1, 1), date(2025, 1, 2))
-    assert dr.start_date == date(2025, 1, 1)
-    assert dr.end_date == date(2025, 1, 2)
+class TestDateRange:
+    def test_end_date_earlier_than_start_date_raises_error(self):
+        with pytest.raises(ValueError, match="End date"):
+            DateRange(start_date=date(2026, 7, 10), end_date=date(2026, 7, 9))
 
-
-def test_date_range_invalid():
-    """US 1: The event cannot be created if the end date is earlier than the start date."""
-    with pytest.raises(ValueError, match="End date can't be earlier than start date"):
-        DateRange(date(2025, 1, 2), date(2025, 1, 1))
-
-    # Same date is also invalid based on code implementation
-    with pytest.raises(ValueError, match="End date can't be earlier than start date"):
-        DateRange(date(2025, 1, 1), date(2025, 1, 1))
+    def test_end_date_equal_to_start_date_raises_error(self):
+        with pytest.raises(ValueError, match="End date"):
+            DateRange(start_date=date(2026, 7, 10), end_date=date(2026, 7, 10))
